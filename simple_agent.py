@@ -78,7 +78,7 @@ def randomMurpheys(grid, loc):
             moved = True
         elif choice == 1: # Suck
             # if grid[loc[0]][loc[1]] == False:
-            if 0 != random.randint(0, 4):
+            if 0 != random.randint(0, 3):
                 grid[loc[0]][loc[1]] = True
             else:
                 grid[loc[0]][loc[1]] = False
@@ -103,7 +103,7 @@ def randomMurpheys(grid, loc):
     return grid, loc
 
 def simulation_rando():
-    clean_grid = placeDirt(1)
+    clean_grid = placeDirt(5)
     agent_loc = placeAgent()
 
     moves = 0
@@ -141,9 +141,14 @@ def reflex(grid, loc):
                 return grid, loc, 1
 
 def reflexMurpheys(grid, loc):
-    if grid[loc[0]][loc[1]] == False:
-       grid[loc[0]][loc[1]] = True
-       return grid, loc, 1
+    if grid[loc[0]][loc[1]] == False and 0 != random.randint(0, 9): 
+        if 0 != random.randint(0, 3):
+            grid[loc[0]][loc[1]] = True
+        return grid, loc, 1
+    elif grid[loc[0]][loc[1]] == True and 0 == random.randint(0, 9): 
+        if 0 == random.randint(0, 3):
+            grid[loc[0]][loc[1]] = False
+        return grid, loc, 1
     else:
         if loc[0] == 0:
             if loc[1] != 2:
@@ -167,12 +172,12 @@ def reflexMurpheys(grid, loc):
                 return grid, loc, 1
 
 def simulation_reflex():
-    clean_grid = placeDirt(5)
+    clean_grid = placeDirt(1)
     agent_loc = placeAgent()
     moves = 0
 
     while not checkGrid(clean_grid):
-        clean_grid, agent_loc, nummov = reflex(clean_grid, agent_loc)
+        clean_grid, agent_loc, nummov = reflexMurpheys(clean_grid, agent_loc)
         moves = moves + nummov
 
     return moves
@@ -180,6 +185,6 @@ def simulation_reflex():
 if __name__ == "__main__":
     total = 0
     for i in range(0, 10000):
-        total = total + simulation_rando()
+        total = total + simulation_reflex()
     avg = total / 10000
     print(avg)
